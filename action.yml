@@ -1,0 +1,19 @@
+name: 'CD Trigger Action'
+description: 'Trigger for CD'
+author: 'zezaeoh <zezaeoh@github.com>'
+inputs:
+  profile:
+    required: true
+    description: 'available profile: dev, stage, prod'
+  manifest-path:
+    required: true
+    description: 'helm chart manifest path'
+  image-tag:
+    required: true
+    description: 'docker image tag to deploy'
+  version:
+    required: false
+    description: 'version tag'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
