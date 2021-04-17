@@ -40,26 +40,8 @@ function getAuthToken() {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-function checkTriggerStatus(buildNum) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        const res = yield node_fetch_1.default(`${getBaseUrl()}/cd/trigger/${buildNum}/status`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Token ${getAuthToken()}`
-            }
-        });
-        if (res.status === 202) {
-            yield sleep(1000);
-            yield checkTriggerStatus(buildNum);
-        }
-        else if (res.status !== 200)
-            throw Error((_a = (yield res.json())) === null || _a === void 0 ? void 0 : _a.message);
-    });
-}
 function triggerCD(body) {
-    var _a, _b;
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const res = yield node_fetch_1.default(`${getBaseUrl()}/cd/trigger`, {
             method: 'POST',
@@ -69,10 +51,12 @@ function triggerCD(body) {
             },
             body: JSON.stringify(body)
         });
-        if (res.status !== 200)
+        if (res.status === 409) {
+            yield sleep(1000);
+            yield triggerCD(body);
+        }
+        else if (res.status !== 200)
             throw Error((_a = (yield res.json())) === null || _a === void 0 ? void 0 : _a.message);
-        const buildNum = (_b = (yield res.json())) === null || _b === void 0 ? void 0 : _b.build_num;
-        yield checkTriggerStatus(buildNum);
     });
 }
 exports.triggerCD = triggerCD;

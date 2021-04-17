@@ -22,21 +22,6 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function checkTriggerStatus(buildNum: number): Promise<void> {
-  const res = await fetch(`${getBaseUrl()}/cd/trigger/${buildNum}/status`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Token ${getAuthToken()}`
-    }
-  })
-
-  if (res.status === 202) {
-    await sleep(1000)
-    await checkTriggerStatus(buildNum)
-  } else if (res.status !== 200) throw Error((await res.json())?.message)
-}
-
 export async function triggerCD(body: {
   profile: string
   manifest_path: string
@@ -52,8 +37,8 @@ export async function triggerCD(body: {
     body: JSON.stringify(body)
   })
 
-  if (res.status !== 200) throw Error((await res.json())?.message)
-
-  const buildNum: number = (await res.json())?.build_num
-  await checkTriggerStatus(buildNum)
+  if (res.status === 409) {
+    await sleep(1000)
+    await triggerCD(body)
+  } else if (res.status !== 200) throw Error((await res.json())?.message)
 }
