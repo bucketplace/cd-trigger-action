@@ -40,9 +40,11 @@ function getAuthToken() {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-function triggerCD(body) {
+function triggerCD(body, retry_cnt = 0) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        if (retry_cnt > 30)
+            throw Error('max retry attempts over!');
         const res = yield node_fetch_1.default(`${getBaseUrl()}/cd/trigger`, {
             method: 'POST',
             headers: {
@@ -53,7 +55,7 @@ function triggerCD(body) {
         });
         if (res.status === 409) {
             yield sleep(1000);
-            yield triggerCD(body);
+            yield triggerCD(body, retry_cnt + 1);
         }
         else if (res.status !== 200)
             throw Error((_a = (yield res.json())) === null || _a === void 0 ? void 0 : _a.message);

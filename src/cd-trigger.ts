@@ -22,12 +22,17 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export async function triggerCD(body: {
-  profile: string
-  manifest_path: string
-  image_tag: string
-  version?: string
-}): Promise<void> {
+export async function triggerCD(
+  body: {
+    profile: string
+    manifest_path: string
+    image_tag: string
+    version?: string
+  },
+  retry_cnt = 0
+): Promise<void> {
+  if (retry_cnt > 30) throw Error('max retry attempts over!')
+
   const res = await fetch(`${getBaseUrl()}/cd/trigger`, {
     method: 'POST',
     headers: {
@@ -39,6 +44,6 @@ export async function triggerCD(body: {
 
   if (res.status === 409) {
     await sleep(1000)
-    await triggerCD(body)
+    await triggerCD(body, retry_cnt + 1)
   } else if (res.status !== 200) throw Error((await res.json())?.message)
 }
