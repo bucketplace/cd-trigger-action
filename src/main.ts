@@ -7,6 +7,7 @@ async function run(): Promise<void> {
     const manifestPath: string = core.getInput('manifest-path', {
       required: true
     })
+    const manifestRepo: string = core.getInput('manifest-repo')
     const imageTag: string = core.getInput('image-tag', {required: true})
     const version: string = core.getInput('version')
 
@@ -16,6 +17,7 @@ async function run(): Promise<void> {
     await triggerCD({
       profile,
       manifest_path: manifestPath,
+      manifest_repo: manifestRepo ? manifestRepo : undefined,
       image_tag: imageTag,
       version: version ? version : undefined
     })
