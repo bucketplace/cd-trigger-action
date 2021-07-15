@@ -26,6 +26,7 @@ export async function triggerCD(
   body: {
     profile: string
     manifest_path: string
+    manifest_repo?: string
     image_tag: string
     version?: string
   },

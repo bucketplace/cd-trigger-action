@@ -109,12 +109,14 @@ function run() {
             const manifestPath = core.getInput('manifest-path', {
                 required: true
             });
+            const manifestRepo = core.getInput('manifest-repo');
             const imageTag = core.getInput('image-tag', { required: true });
             const version = core.getInput('version');
             core.debug(`Trigger CD to ${manifestPath}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`);
             yield cd_trigger_1.triggerCD({
                 profile,
                 manifest_path: manifestPath,
+                manifest_repo: manifestRepo ? manifestRepo : undefined,
                 image_tag: imageTag,
                 version: version ? version : undefined
             });
