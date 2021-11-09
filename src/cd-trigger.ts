@@ -17,34 +17,41 @@ function getAuthToken(): string {
   return token
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getErrorMsg(obj: any): string {
+  return obj.detail || JSON.stringify(obj, null, 2)
+}
+
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export async function triggerCD(
+  application: string,
   body: {
     profile: string
-    manifest_path: string
-    manifest_repo?: string
     image_tag: string
-    version?: string
+    version: string
   },
   retry_cnt = 0
 ): Promise<void> {
   if (retry_cnt > 30) throw Error('max retry attempts over!')
 
-  const res = await fetch(`${getBaseUrl()}/cd/trigger`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Token ${getAuthToken()}`
-    },
-    body: JSON.stringify(body)
-  })
+  const res = await fetch(
+    `${getBaseUrl()}/applications/${application}/cd-trigger`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${getAuthToken()}`
+      },
+      body: JSON.stringify(body)
+    }
+  )
 
   if (res.status === 409) {
     await sleep(1000)
-    await triggerCD(body, retry_cnt + 1)
-  } else if (res.status !== 200) throw Error((await res.json())?.message)
+    await triggerCD(application, body, retry_cnt + 1)
+  } else if (res.status !== 200) throw Error(getErrorMsg(await res.json()))
 }

@@ -3,23 +3,18 @@ import {triggerCD} from './cd-trigger'
 
 async function run(): Promise<void> {
   try {
+    const application: string = core.getInput('application', {required: true})
     const profile: string = core.getInput('profile', {required: true})
-    const manifestPath: string = core.getInput('manifest-path', {
-      required: true
-    })
-    const manifestRepo: string = core.getInput('manifest-repo')
     const imageTag: string = core.getInput('image-tag', {required: true})
-    const version: string = core.getInput('version')
+    const version: string = core.getInput('version', {required: true})
 
     core.debug(
-      `Trigger CD to ${manifestPath}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`
+      `Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`
     )
-    await triggerCD({
+    await triggerCD(application, {
       profile,
-      manifest_path: manifestPath,
-      manifest_repo: manifestRepo ? manifestRepo : undefined,
       image_tag: imageTag,
-      version: version ? version : undefined
+      version
     })
   } catch (error) {
     core.setFailed(error.message)
