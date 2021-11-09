@@ -39,7 +39,7 @@ export async function triggerCD(
   if (retry_cnt > 30) throw Error('max retry attempts over!')
 
   const res = await fetch(
-    `${getBaseUrl()}/applications/${application}/cd-trigger`,
+    `${getBaseUrl()}/api/v1/applications/${application}/cd-trigger/`,
     {
       method: 'POST',
       headers: {

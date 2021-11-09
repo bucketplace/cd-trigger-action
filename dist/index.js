@@ -48,7 +48,7 @@ function triggerCD(application, body, retry_cnt = 0) {
     return __awaiter(this, void 0, void 0, function* () {
         if (retry_cnt > 30)
             throw Error('max retry attempts over!');
-        const res = yield node_fetch_1.default(`${getBaseUrl()}/applications/${application}/cd-trigger`, {
+        const res = yield node_fetch_1.default(`${getBaseUrl()}/api/v1/applications/${application}/cd-trigger/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
