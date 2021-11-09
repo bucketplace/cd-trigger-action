@@ -2,20 +2,17 @@ name: 'CD Trigger Action'
 description: 'Trigger for CD'
 author: 'zezaeoh <zezaeoh@github.com>'
 inputs:
+  application:
+    required: true
+    description: 'application name'
   profile:
     required: true
     description: 'available profile: dev, stage, prod'
-  manifest-path:
-    required: true
-    description: 'helm chart manifest path'
-  manifest-repo:
-    required: false
-    description: 'helm chart repository'
   image-tag:
     required: true
     description: 'docker image tag to deploy'
   version:
-    required: false
+    required: true
     description: 'version tag'
 runs:
   using: 'node12'

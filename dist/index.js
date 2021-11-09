@@ -40,12 +40,11 @@ function getAuthToken() {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-function triggerCD(body, retry_cnt = 0) {
-    var _a;
+function triggerCD(application, body, retry_cnt = 0) {
     return __awaiter(this, void 0, void 0, function* () {
         if (retry_cnt > 30)
             throw Error('max retry attempts over!');
-        const res = yield node_fetch_1.default(`${getBaseUrl()}/cd/trigger`, {
+        const res = yield node_fetch_1.default(`${getBaseUrl()}/applications/${application}/cd-trigger`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,10 +54,10 @@ function triggerCD(body, retry_cnt = 0) {
         });
         if (res.status === 409) {
             yield sleep(1000);
-            yield triggerCD(body, retry_cnt + 1);
+            yield triggerCD(application, body, retry_cnt + 1);
         }
         else if (res.status !== 200)
-            throw Error((_a = (yield res.json())) === null || _a === void 0 ? void 0 : _a.message);
+            throw Error(yield res.json());
     });
 }
 exports.triggerCD = triggerCD;
@@ -105,20 +104,15 @@ const cd_trigger_1 = __nccwpck_require__(291);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const application = core.getInput('application', { required: true });
             const profile = core.getInput('profile', { required: true });
-            const manifestPath = core.getInput('manifest-path', {
-                required: true
-            });
-            const manifestRepo = core.getInput('manifest-repo');
             const imageTag = core.getInput('image-tag', { required: true });
-            const version = core.getInput('version');
-            core.debug(`Trigger CD to ${manifestPath}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`);
-            yield cd_trigger_1.triggerCD({
+            const version = core.getInput('version', { required: true });
+            core.debug(`Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`);
+            yield cd_trigger_1.triggerCD(application, {
                 profile,
-                manifest_path: manifestPath,
-                manifest_repo: manifestRepo ? manifestRepo : undefined,
                 image_tag: imageTag,
-                version: version ? version : undefined
+                version
             });
         }
         catch (error) {
