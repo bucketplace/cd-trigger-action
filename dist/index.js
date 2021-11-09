@@ -36,6 +36,10 @@ function getAuthToken() {
         throw ReferenceError('There is no token defined in the environment variables');
     return token;
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getErrorMsg(obj) {
+    return obj.detail || JSON.stringify(obj, null, 2);
+}
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -57,7 +61,7 @@ function triggerCD(application, body, retry_cnt = 0) {
             yield triggerCD(application, body, retry_cnt + 1);
         }
         else if (res.status !== 200)
-            throw Error(yield res.json());
+            throw Error(getErrorMsg(yield res.json()));
     });
 }
 exports.triggerCD = triggerCD;

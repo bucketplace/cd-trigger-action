@@ -17,6 +17,11 @@ function getAuthToken(): string {
   return token
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getErrorMsg(obj: any): string {
+  return obj.detail || JSON.stringify(obj, null, 2)
+}
+
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -48,5 +53,5 @@ export async function triggerCD(
   if (res.status === 409) {
     await sleep(1000)
     await triggerCD(application, body, retry_cnt + 1)
-  } else if (res.status !== 200) throw Error(await res.json())
+  } else if (res.status !== 200) throw Error(getErrorMsg(await res.json()))
 }
