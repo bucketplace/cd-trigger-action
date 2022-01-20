@@ -14,6 +14,9 @@ inputs:
   version:
     required: true
     description: 'version tag'
+  env:
+    required: false
+    description: 'target environment'
 runs:
   using: 'node12'
   main: 'dist/index.js'

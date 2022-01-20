@@ -112,11 +112,13 @@ function run() {
             const profile = core.getInput('profile', { required: true });
             const imageTag = core.getInput('image-tag', { required: true });
             const version = core.getInput('version', { required: true });
+            const env = core.getInput('env');
             core.debug(`Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`);
             yield cd_trigger_1.triggerCD(application, {
                 profile,
                 image_tag: imageTag,
-                version
+                version,
+                env: env ? env : undefined
             });
         }
         catch (error) {

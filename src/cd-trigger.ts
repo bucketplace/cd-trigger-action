@@ -33,6 +33,7 @@ export async function triggerCD(
     profile: string
     image_tag: string
     version: string
+    env?: string
   },
   retry_cnt = 0
 ): Promise<void> {

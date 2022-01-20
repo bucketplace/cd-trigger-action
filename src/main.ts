@@ -7,6 +7,7 @@ async function run(): Promise<void> {
     const profile: string = core.getInput('profile', {required: true})
     const imageTag: string = core.getInput('image-tag', {required: true})
     const version: string = core.getInput('version', {required: true})
+    const env: string = core.getInput('env')
 
     core.debug(
       `Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`
@@ -14,7 +15,8 @@ async function run(): Promise<void> {
     await triggerCD(application, {
       profile,
       image_tag: imageTag,
-      version
+      version,
+      env: env ? env : undefined
     })
   } catch (error) {
     core.setFailed(error.message)
