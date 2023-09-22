@@ -1,8 +1,8 @@
 import fetch from 'node-fetch'
 
 interface ExtraProps {
-  commit_sha?: string;
-  repo_url?: string;
+  commit_sha?: string
+  repo_url?: string
 }
 
 function getBaseUrl(): string {
