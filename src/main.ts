@@ -8,8 +8,8 @@ async function run(): Promise<void> {
     const imageTag: string = core.getInput('image-tag', {required: true})
     const version: string = core.getInput('version', {required: true})
     const env: string = core.getInput('env')
-    const commitSha: string | undefined = core.getInput('commit-sha');
-    const repoUrl: string | undefined = core.getInput('repo-url');
+    const commitSha: string | undefined = core.getInput('commit-sha')
+    const repoUrl: string | undefined = core.getInput('repo-url')
 
     core.debug(
       `Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`
