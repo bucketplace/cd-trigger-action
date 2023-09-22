@@ -1,5 +1,10 @@
 import fetch from 'node-fetch'
 
+interface ExtraProps {
+  commit_sha?: string
+  repo_url?: string
+}
+
 function getBaseUrl(): string {
   let url = process.env.BASE_URL
   if (!url)
@@ -34,6 +39,7 @@ export async function triggerCD(
     image_tag: string
     version: string
     env?: string
+    extra?: ExtraProps
   },
   retry_cnt = 0
 ): Promise<void> {
