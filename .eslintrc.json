@@ -1,5 +1,5 @@
 {
-    "plugins": ["jest", "@typescript-eslint"],
+    "plugins": ["@typescript-eslint"],
     "extends": ["plugin:github/recommended"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -10,6 +10,7 @@
     "rules": {
       "eslint-comments/no-use": "off",
       "import/no-namespace": "off",
+      "i18n-text/no-en": "off",
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error",
       "@typescript-eslint/explicit-member-accessibility": ["error", {"accessibility": "no-public"}],
@@ -48,7 +49,6 @@
     },
     "env": {
       "node": true,
-      "es6": true,
-      "jest/globals": true
+      "es6": true
     }
   }
