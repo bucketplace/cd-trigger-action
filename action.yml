@@ -17,6 +17,12 @@ inputs:
   env:
     required: false
     description: 'target environment'
+  commit-sha: 
+    required: false
+    description: 'Commit SHA from the repository'
+  repo-url:
+    required: false
+    description: 'Repository URL without "https://" prefix'
 runs:
   using: 'node12'
   main: 'dist/index.js'
