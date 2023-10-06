@@ -12,7 +12,7 @@ async function run(): Promise<void> {
     const repoUrl: string | undefined = core.getInput('repo-url')
 
     core.debug(
-      `Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`
+      `Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}, env: ${env}, commitSha: ${commitSha}, repoUrl: ${repoUrl}`
     )
     await triggerCD(application, {
       profile,
