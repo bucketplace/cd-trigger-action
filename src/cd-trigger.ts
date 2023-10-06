@@ -45,10 +45,8 @@ export async function triggerCD(
   retry_cnt = 0
 ): Promise<void> {
   if (retry_cnt > 30) throw Error('max retry attempts over!')
-  
-  core.debug(
-    `Sending request with body: ${JSON.stringify(body)}`
-  )
+
+  core.debug(`Sending request with body: ${JSON.stringify(body)}`)
 
   const res = await fetch(
     `${getBaseUrl()}/api/v1/applications/${application}/cd-trigger/`,
