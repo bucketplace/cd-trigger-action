@@ -7,6 +7,25 @@ require('./sourcemap-register.js');module.exports =
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -22,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.triggerCD = void 0;
 const node_fetch_1 = __importDefault(__nccwpck_require__(467));
+const core = __importStar(__nccwpck_require__(186));
 function getBaseUrl() {
     let url = process.env.BASE_URL;
     if (!url)
@@ -48,6 +68,7 @@ function triggerCD(application, body, retry_cnt = 0) {
     return __awaiter(this, void 0, void 0, function* () {
         if (retry_cnt > 30)
             throw Error('max retry attempts over!');
+        core.debug(`Sending request with body: ${JSON.stringify(body)}`);
         const res = yield node_fetch_1.default(`${getBaseUrl()}/api/v1/applications/${application}/cd-trigger/`, {
             method: 'POST',
             headers: {
@@ -113,12 +134,18 @@ function run() {
             const imageTag = core.getInput('image-tag', { required: true });
             const version = core.getInput('version', { required: true });
             const env = core.getInput('env');
-            core.debug(`Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}`);
+            const commitSha = core.getInput('commit-sha');
+            const repoUrl = core.getInput('repo-url');
+            core.debug(`Trigger CD for ${application}, profile: ${profile}, imageTag: ${imageTag}, version: ${version}, env: ${env}, commitSha: ${commitSha}, repoUrl: ${repoUrl}`);
             yield cd_trigger_1.triggerCD(application, {
                 profile,
                 image_tag: imageTag,
                 version,
-                env: env ? env : undefined
+                env: env ? env : undefined,
+                extra: {
+                    commit_sha: commitSha ? commitSha : undefined,
+                    repo_url: repoUrl ? repoUrl : undefined
+                }
             });
         }
         catch (error) {
