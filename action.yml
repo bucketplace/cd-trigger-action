@@ -24,5 +24,5 @@ inputs:
     required: false
     description: 'Repository URL without "https://" prefix'
 runs:
-  using: 'node12'
+  using: 'Node20'
   main: 'dist/index.js'
