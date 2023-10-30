@@ -1,6 +1,6 @@
 name: 'CD Trigger Action'
 description: 'Trigger for CD'
-author: 'zezaeoh <zezaeoh@github.com>'
+author: 'infra <bp-deployer@github.com>'
 inputs:
   application:
     required: true
